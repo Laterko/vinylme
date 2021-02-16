@@ -18,25 +18,15 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
             minlength: 8,
-            maxlength: 32
-        },
-        firstName:{
-            type: String,
-            required: true,
-            minlength: 2,
-            maxlength: 32
-        },
-        lastName:{
-            type: String,
-            required: true,
-            minlength: 2,
-            maxlength: 32
+            maxlength: 64
         },
         joinDate:{
             type: Date,
             default: Date.now
         },
-        adminUser: Boolean
+        adminUser: {
+          type: Boolean
+        }
     }
 );
 

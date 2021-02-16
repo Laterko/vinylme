@@ -3,13 +3,20 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
+
 var logger = require('morgan');
 const mongoose = require('mongoose');
-var mongodbConfig = require("./config/mongodb.config.json");
 require('dotenv').config();
 
-mongoose.connect(mongodbConfig.connection, mongodbConfig.options,
-  () => console.log('connected to DB'));
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
+
+mongoose.connect(process.env.DB_CONNECTION, {
+  "useNewUrlParser": true,
+  "useUnifiedTopology": true,
+  "useCreateIndex": true,
+  "useFindAndModify": true
+},() => console.log('connected to DB'));
 
 app.use(logger('dev'));
 app.use(express.json()); //send json post request
@@ -17,15 +24,8 @@ app.use(express.urlencoded({ extended: true })); //wbudowany bodyparser -> true
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//const User = require('../model/user.schema');
-//middle do routes
-//app.use(require('./routes/index.routes'));
-//app.use(require('./routes/users.routes'));
-const usersRoutes = require('./routes/users.routes');
-app.use('/signup', usersRoutes);
-
-const indexRoutes = require('./routes/index.routes');
-app.use('/', indexRoutes);
+app.use(require('./routes/index.routes'));
+app.use(require('./routes/users.routes'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
